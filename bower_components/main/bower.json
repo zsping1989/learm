@@ -1,0 +1,17 @@
+{
+  "name": "zsping1989/main",
+  "version": "1.0.0",
+  "ignore": [],
+  "homepage": "http://www.zsping1989.com",
+  "authors": [
+    "zsping1989.com"
+  ],
+  "description": "A file and module loader for JavaScript",
+  "main": "main",
+  "keywords": [
+    "Angular"
+  ],
+  "license": [
+    "MIT"
+  ]
+}

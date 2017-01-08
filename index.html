@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>angular学习</title>
+    <link href="bower_components/bootstrap/dist/css/bootstrap.min.css">
+</head>
+<body  >
+<script src="bower_components/angular/angular.min.js"></script>
+<script src="bower_components/angular-animate/angular-animate.min.js"></script>
+<script src="bower_components/main/main.js"></script>
+<script>
+    var app = angular.module('app',['ngAnimate','ngMain']);
+    //多级联动
+    var ftxMultilevelMoveDirective = ['$parse', '$animate', '$compile', function($parse, $animate, $compile) {
+        return {
+            restrict: 'A', //属性
+            templateUrl:"./bower_components/main/multilevel-move.html",
+            link: function ($scope,$element, $attr) {
+                //定义层级
+                var lavel,keyBy;
+
+                keyBy = function (datas,key,prefix){
+                    prefix = prefix || 'id_';
+                    prefix = prefix+'';//字符串类型
+                    var result = {};
+                    datas.map(function(item){
+                        if(typeof item.childrens=="object" && item.childrens.length){
+                            item.childrens=keyBy(item.childrens,key,prefix);
+                        }
+                        result[prefix+item[key]] = item;
+                    });
+                    return result;
+                }
+                //改变值
+                $scope.change = function(value,select_index){
+                    //选择存在子节点,添加子节点选项
+                    if(typeof $scope.datas['id_'+value]=='object' && typeof $scope.datas['id_'+value]['childrens']=="object"){
+                        $scope.seleceLength[select_index+1] = select_index+1;
+                        console.log( $scope.seleceLength);
+                    //不存在子节点,删除子节点选项
+                    }else {
+                         $scope.seleceLength.splice(select_index+1,1);
+                        console.log($scope.seleceLength);
+                    }
+                }
+                $scope.$watch($attr.ftxMultilevelMove, function (value) {
+                    $scope.seleceLength = [0];
+                    $scope.datas = keyBy(value,'id');
+                });
+            },
+            scope:true
+        };
+    }];
+
+    app.directive({ ftxMultilevelMove:ftxMultilevelMoveDirective});
+    app.controller('main',function($scope){
+        $scope.data = [
+                {
+                    "id":2,
+                    'name':'四川',
+                    'parent_id':1,
+                    "childrens":[
+                        {
+                            "id":4,
+                            'name':'成都',
+                            'parent_id':2
+                        },
+                        {
+                            "id":5,
+                            'name':'资阳',
+                            'parent_id':2
+                        }
+                    ]
+                },
+                {
+                    "id":3,
+                    'name':'湖南',
+                    'parent_id':1
+                }
+            ];
+        $scope.change = function(){
+            $scope.data = [
+                {
+                    "id":2,
+                    'name':'四川',
+                    'parent_id':1,
+                    "childrens":[
+                        {
+                            "id":4,
+                            'name':'成都',
+                            'parent_id':2
+                        },
+                        {
+                            "id":5,
+                            'name':'资阳',
+                            'parent_id':2
+                        }
+                    ]
+                }
+            ];
+        }
+    });
+</script>
+<div ng-app="app">
+    <div ng-controller="main">
+        <div ftx-multilevel-move="data"></div>
+        <button type="button" ng-click="change()">改变</button>
+    </div>
+</div>
+</body>
+</html>

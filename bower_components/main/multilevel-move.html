@@ -1,0 +1,4 @@
+<select name="area[]" ng-model="area[value]" ng-repeat="value in seleceLength" ng-change="change(area[value],value)" >
+    <option value="">请选择</option>
+    <option ng-repeat="x in datas" value="{{x['id']}}">{{x['name']}}</option>
+</select>
