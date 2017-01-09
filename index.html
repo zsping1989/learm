@@ -23,28 +23,28 @@
         $scope.data = [
                 {
                     "id":2,
-                    'name':'四川',
-                    'parent_id':1,
+                    "name":'四川',
+                    "parent_id":1,
                     "childrens":[
                         {
                             "id":4,
-                            'name':'成都',
-                            'parent_id':2
+                            "name":'成都',
+                            "parent_id":2
                         },
                         {
                             "id":5,
-                            'name':'资阳',
-                            'parent_id':2,
+                            "name":'资阳',
+                            "parent_id":2,
                             "childrens":[
                                 {
                                     "id":6,
-                                    'name':'雁江区',
-                                    'parent_id':5
+                                    "name":'雁江区',
+                                    "parent_id":5
                                 },
                                 {
                                     "id":7,
-                                    'name':'丰裕镇',
-                                    'parent_id':5
+                                    "name":'丰裕镇',
+                                    "parent_id":5
                                 }
                             ]
                         }
@@ -52,35 +52,36 @@
                 },
                 {
                     "id":3,
-                    'name':'湖南',
-                    'parent_id':1
+                    "name":'湖南',
+                    "parent_id":1
                 }
             ];
 
         //配置
         $scope.config = {
-            show : 'name', //显示字段
-            value : 'name', //值
+            show : "name", //显示字段
+            value : "name", //值
             label : ['省','市','区'] //标记
         };
+
 
         //改变数据
         $scope.change = function(){
             $scope.data = [
                 {
                     "id":2,
-                    'name':'四川',
-                    'parent_id':1,
+                    "name":"四川",
+                    "parent_id":1,
                     "childrens":[
                         {
                             "id":4,
-                            'name':'成都',
-                            'parent_id':2
+                            "name":"成都",
+                            "parent_id":2
                         },
                         {
                             "id":5,
-                            'name':'资阳',
-                            'parent_id':2
+                            "name":"资阳",
+                            "parent_id":2
                         }
                     ]
                 }
@@ -90,7 +91,11 @@
 </script>
 <div ng-app="app">
     <div ng-controller="main">
-        <div ftx-multilevel-move="data" ftx-multilevel-move-config="config"></div>
+        <div ftx-multilevel-move='data' ftx-multilevel-move-config="{
+            show : 'name',
+                    value : 'name',
+                label : ['省','市','区']
+        }"></div>
         <button type="button" ng-click="change()">改变</button>
     </div>
 </div>

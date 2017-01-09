@@ -34,6 +34,9 @@
      * 配置覆盖
      */
     var overCinfig = function(old_config,config){
+        if(!config){
+            return old_config;
+        }
         for (var i in old_config){
             if(typeof config[i] != 'undefined'){
                 old_config[i] = config[i];
@@ -77,7 +80,20 @@
             restrict: 'A', //属性
             templateUrl:"./bower_components/main/multilevel-move.html",
             link: function ($scope,$element, $attr) {
-                $scope.config = overCinfig(config,$scope[$attr[prefixKey('MultilevelMoveConfig')]]);
+                var main_config;
+                //没有定义配置
+                if(typeof $attr[prefixKey('MultilevelMoveConfig')] == 'undefined' || !$attr[prefixKey('MultilevelMoveConfig')]){
+                    main_config = null;
+                }else {
+                    var str = 'main_config = typeof '+$attr[prefixKey('MultilevelMoveConfig')]+' =="undefined" ? null : '+$attr[prefixKey('MultilevelMoveConfig')]+';';
+                    //定义配置且是json时
+                    if($attr[prefixKey('MultilevelMoveConfig')]!='config' && eval(str)){
+                        main_config = main_config || null;
+                    }else {
+                        main_config = typeof $scope[$attr[prefixKey('MultilevelMoveConfig')]] == 'undefined' ? null : $scope[$attr[prefixKey('MultilevelMoveConfig')]];
+                    }
+                }
+                $scope.config = overCinfig(config,main_config);
 
                 //改变值
                 $scope.change = function(value,select_index){
