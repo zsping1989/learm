@@ -2,11 +2,15 @@
  * Created by zhangshiping on 2017/1/8.
  */
 (function(window,angular){
+
     //定义模块名称
     var MODULE_NAME = 'Main';
+
     //定义指令前缀
     var DIRECTIVE_PREFIX = 'ftx';
-    var app =  angular.module('ng'+MODULE_NAME,[]);
+
+    //所有定义指令
+    var directive = {};
 
     /**
      * 命令拼接前缀
@@ -15,19 +19,6 @@
      */
     var prefixKey = function(key){
         return DIRECTIVE_PREFIX+key.replace(/(\w)/,function(v){return v.toUpperCase()});
-    };
-
-    /**
-     * 命令拼接前缀
-     * @param obj
-     * @returns {{}}
-     */
-    var prefixObj = function(obj){
-        var result = {};
-        for(var key in obj){
-            result[prefixKey(key)] = obj[key];
-        }
-        return result;
     };
 
     /**
@@ -46,10 +37,23 @@
     }
 
     /**
+     * 命令拼接前缀
+     * @param obj
+     * @returns {{}}
+     */
+    var prefixObj = function(obj){
+        var result = {};
+        for(var key in obj){
+            result[prefixKey(key)] = obj[key];
+        }
+        return result;
+    };
+
+    /**
      * 多级联动
      * @type {*[]}
      */
-    var multilevelMoveDirective = ['$parse', '$animate', '$compile', function($parse, $animate, $compile) {
+    directive.multilevelMove = ['$parse', '$animate', '$compile', function($parse, $animate, $compile) {
         //默认配置
         var config = {
             show : 'name', //显示字段
@@ -131,12 +135,11 @@
         };
     }];
 
+    //应用模块创建
+    var app =  angular.module('ng'+MODULE_NAME,[]);
+
     /**
      * 注册自定义命令
      */
-    app.directive(prefixObj(
-        {
-            multilevelMove:multilevelMoveDirective
-        }
-    ));
+    app.directive(prefixObj(directive));
 })(window,window.angular);
