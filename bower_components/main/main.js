@@ -53,6 +53,7 @@
             value : 'id', //值
             childrens_key : 'childrens', //子节点字段
             element_name : '', //表单节点名称
+            label : [], //标签
             primary_key : 'id', //主键
             parent_key : 'parent_id' //父级字段
 
