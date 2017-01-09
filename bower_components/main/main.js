@@ -78,7 +78,13 @@
 
         return {
             restrict: 'A', //属性
-            templateUrl:"./bower_components/main/multilevel-move.html",
+            template:'<span ng-repeat="(key,value) in seleceLength">'+
+                        '<label>{{config[\'label\'][key]}}</label>'+
+                        '<select name="{{config[\'element_name\']}}"  ng-model="area[key]" ng-change="change(area[key],key)" >'+
+                            '<option value="">请选择</option>'+
+                            '<option ng-repeat="x in value" value="{{x[config[\'value\']]}}">{{x[config[\'show\']]}}</option>'+
+                        '</select>'+
+                    '</span>',
             link: function ($scope,$element, $attr) {
                 var main_config;
                 //没有定义配置
