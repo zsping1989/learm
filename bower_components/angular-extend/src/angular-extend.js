@@ -66,11 +66,18 @@
             label : [], //标签
             margin_tree : false, //边界数结构
             primary_key : 'id', //主键
-            parent_key : 'parent_id' //父级字段
-
+            parent_key : 'parent_id', //父级字段
+            selected : false //默认选中第一个
         };
 
-        //将数据某一列作key
+        /**
+         * 将数据某一列作key
+         * @param datas 需要处理的数据
+         * @param key 主键,唯一标示
+         * @param childrens_key 子节点的键
+         * @param prefix 键前缀
+         * @returns {{}}
+         */
         var keyBy = function (datas,key,childrens_key,prefix){
             prefix = prefix || 'id_';
             prefix = prefix+'';//字符串类型
@@ -84,13 +91,29 @@
             return result;
         };
 
-        //边界树换成树状结构
-        var toTree = function(datas){
-            var result = {};
-            for(var key in datas){
-                //result[key] =
+        /**
+         * json格式转树状结构
+         * @param   {json}      json数据
+         * @param   {String}    id的字符串
+         * @param   {String}    父id的字符串
+         * @param   {String}    children的字符串
+         * @return  {Array}     数组
+         */
+        function toTree(a, idStr, pidStr, chindrenStr){
+            var r = [], hash = {}, id = idStr, pid = pidStr, children = chindrenStr, i = 0, j = 0, len = a.length;
+            for(; i < len; i++){
+                hash[a[i][id]] = a[i];
             }
-
+            for(; j < len; j++){
+                var aVal = a[j], hashVP = hash[aVal[pid]];
+                if(hashVP){
+                    !hashVP[children] && (hashVP[children] = []);
+                    hashVP[children].push(aVal);
+                }else{
+                    r.push(aVal);
+                }
+            }
+            return r;
         }
 
         return {
@@ -132,8 +155,16 @@
 
                 //监听数据改变
                 $scope.$watch($attr[prefixKey('MultilevelMove')], function (value) {
+                    //获取数据
+                    var datas = $scope.$eval($attr[prefixKey('MultilevelMove')]);
+
+                    //非树状结构转换树状结构
+                    if($scope.config['margin_tree']){
+                        datas = toTree(datas,$scope.config['primary_key'],$scope.config['parent_key'], $scope.config['childrens_key']);
+                    }
+
                     //将主键设置成key标记
-                    $scope.datas = $scope.config['margin_tree'] ? toTree(keyBy($scope.$eval($attr[prefixKey('MultilevelMove')]),$scope.config['primary_key'],'')) : keyBy($scope.$eval($attr[prefixKey('MultilevelMove')]),$scope.config['value'],$scope.config['childrens_key']);
+                    $scope.datas =  keyBy(datas,$scope.config['value'],$scope.config['childrens_key']);
 
                     //选择的值
                     $scope.area = typeof $scope.area=='undefined' ? [] : $scope.area;
