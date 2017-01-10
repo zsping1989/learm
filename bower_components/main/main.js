@@ -1,7 +1,7 @@
 /**
  * Created by zhangshiping on 2017/1/8.
  */
-(function(window,angular){
+(function(window,angular){'use strict';
 
     //定义模块名称
     var MODULE_NAME = 'Main';
@@ -25,15 +25,18 @@
      * 配置覆盖
      */
     var overCinfig = function(old_config,config){
+        var result = {};
         if(!config){
             return old_config;
         }
         for (var i in old_config){
             if(typeof config[i] != 'undefined'){
-                old_config[i] = config[i];
+                result[i] = config[i];
+            }else {
+                result[i] = old_config[i];
             }
         }
-        return old_config;
+        return result;
     }
 
     /**
@@ -82,6 +85,7 @@
 
         return {
             restrict: 'A', //属性
+            //templateUrl : './bower_components/main/multilevel-move.html',
             template:'<span ng-repeat="(key,value) in seleceLength">'+
                         '<label>{{config[\'label\'][key]}}</label>'+
                         '<select name="{{config[\'element_name\']}}"  ng-model="area[key]" ng-change="change(area[key],key)" >'+
@@ -90,19 +94,11 @@
                         '</select>'+
                     '</span>',
             link: function ($scope,$element, $attr) {
-                var main_config;
-                //没有定义配置
-                if(typeof $attr[prefixKey('MultilevelMoveConfig')] == 'undefined' || !$attr[prefixKey('MultilevelMoveConfig')]){
-                    main_config = null;
-                }else {
-                    var str = 'main_config = typeof '+$attr[prefixKey('MultilevelMoveConfig')]+' =="undefined" ? null : '+$attr[prefixKey('MultilevelMoveConfig')]+';';
-                    //定义配置且是json时
-                    if($attr[prefixKey('MultilevelMoveConfig')]!='config' && eval(str)){
-                        main_config = main_config || null;
-                    }else {
-                        main_config = typeof $scope[$attr[prefixKey('MultilevelMoveConfig')]] == 'undefined' ? null : $scope[$attr[prefixKey('MultilevelMoveConfig')]];
-                    }
-                }
+
+                //用户自定义配置
+                var main_config = $scope.$eval($attr[prefixKey('MultilevelMoveConfig')]);
+
+                //现在使用配置
                 $scope.config = overCinfig(config,main_config);
 
                 //改变值
@@ -122,14 +118,29 @@
                         $scope.seleceLength.splice(select_index+1,$scope.seleceLength.length-(select_index+1));
                         $scope.area.splice(select_index+1,$scope.area.length-(select_index+1));
                     }
-                }
+                };
 
                 //监听数据改变
                 $scope.$watch($attr[prefixKey('MultilevelMove')], function (value) {
-                    $scope.datas = keyBy(value,$scope.config['value'],$scope.config['childrens_key']); //将主键设置成key标记
-                    $scope.seleceLength = [$scope.datas]; //默认显示第一级
-                    $scope.area = [];  //选择的值
+                    //将主键设置成key标记
+                    $scope.datas = keyBy($scope.$eval($attr[prefixKey('MultilevelMove')]),$scope.config['value'],$scope.config['childrens_key']);
+
+                    //选择的值
+                    $scope.area = typeof $scope.area=='undefined' ? [] : $scope.area;
+
+                    //默认显示第一级
+                    $scope.seleceLength = [$scope.datas];
+
+                    //循环显示后面层级
+                    for (var i=0;i<$scope.area.length;i++){
+                        if(typeof $scope.seleceLength[i]['id_'+$scope.area[i]]=='undefined'){
+                            $scope.area.splice(i,$scope.area.length-i);
+                            continue;
+                        }
+                        $scope.seleceLength[i+1] = $scope.seleceLength[i]['id_'+$scope.area[i]][$scope.config['childrens_key']];
+                    }
                 });
+
             },
             scope:true
         };
