@@ -8,7 +8,7 @@
 <body  >
 <script src="bower_components/angular/angular.min.js"></script>
 <script src="bower_components/angular-animate/angular-animate.min.js"></script>
-<script src="bower_components/main/main.js"></script>
+<script src="bower_components/angular-extend/src/angular-extend.js"></script>
 <script>
     /* 调试打印 */
     function dump(){
@@ -57,39 +57,47 @@
                 }
             ];
 
-
-
         $scope.data1 = [
             {
-                "id":8,
-                "name":"西藏",
-                "parent_id":1,
-                "childrens":[
-                    {
-                        "id":9,
-                        "name":"成都",
-                        "parent_id":8
-                    },
-                    {
-                        "id":10,
-                        "name":"资阳",
-                        "parent_id":8
-                    }
-                ]
+                "id": 1,
+                "name": "超级管理员",
+                "description": "拥有所有操作权限",
+                "x": 0,
+                "y": 0,
+                "parent_id": 0,
+                "level": 1,
+                "left_margin": 1,
+                "right_margin": 6,
+                "created_at": "2016-11-14 14:18:38",
+                "updated_at": "2016-11-14 14:18:38"
+            },
+            {
+                "id": 2,
+                "name": "观察用户",
+                "description": "只拥有查看权限",
+                "x": 0,
+                "y": 0,
+                "parent_id": 1,
+                "level": 2,
+                "left_margin": 2,
+                "right_margin": 5,
+                "created_at": "2016-11-14 14:18:38",
+                "updated_at": "2016-11-14 14:18:38"
+            },
+            {
+                "id": 3,
+                "name": "观察者下级用户",
+                "description": "只拥有查看权限",
+                "x": 0,
+                "y": 0,
+                "parent_id": 2,
+                "level": 3,
+                "left_margin": 3,
+                "right_margin": 4,
+                "created_at": "2016-11-14 14:18:38",
+                "updated_at": "2016-11-14 14:18:38"
             }
         ];
-
-
-        //改变数据
-        $scope.change = function(){
-            $scope.data1 = $scope.data;
-        }
-
-        //改变配置
-        $scope.changeConfig = function(){
-            $scope.config1 = $scope.config;
-        }
-
 
         //配置
         $scope.config = {
@@ -100,16 +108,15 @@
 
         $scope.config1 = {
             show : "name",
-            value : "name"
+            value : "id",
+            margin_tree : true
         };
     });
 </script>
 <div ng-app="app">
     <div ng-controller="main">
-        <div ftx-multilevel-move='data' ftx-multilevel-move-config='config'></div>
-        <div ftx-multilevel-move='data1' ftx-multilevel-move-config='config'></div>
-        <button type="button" ng-click="change()">改变数据</button>
-        <button type="button" ng-click="changeConfig()">改变配置</button>
+        <!--<div ftx-multilevel-move='data' ftx-multilevel-move-config='config'></div>-->
+        <div ftx-multilevel-move='data1' ftx-multilevel-move-config='config1'></div>
     </div>
 </div>
 </body>
