@@ -2,7 +2,6 @@
  * Created by zhangshiping on 2017/1/8.
  */
 (function(window,angular){'use strict';
-
     //定义模块名称
     var MODULE_NAME = 'Main';
 
@@ -141,19 +140,17 @@
 
         return {
             restrict: 'A', //属性
-            //templateUrl : './bower_components/angular-extend/src/multilevel-move.html',
-            template:'<span ng-repeat="(key,value) in seleceLength">'+
+            templateUrl : 'bower_components/angular-extend/src/multilevel-move.html',
+         /*   template:'<span ng-repeat="(key,value) in seleceLength">'+
                    '    <label>{{config[\'label\'][key]}}</label>'+
                    '    <select name="{{config[\'element_name\'] ? config[\'element_name\']+\'[]\' : \'\'}}" ng-model="area[key]" ng-change="change(area[key],key)" >'+
                    '        <option value="">{{config[\'empty\'][key] || \'请选择\'}}</option>'+
                    '        <option ng-repeat="x in value" value="{{x[config[\'value\']]}}">{{x[config[\'show\']]}}</option>'+
                    '    </select>'+
-                   '</span>',
+                   '</span>',*/
             link: function (scope,element, attr) {
-
                 //用户自定义配置
                 var main_config = scope.$eval(attr[prefixKey('MultilevelMoveConfig')]);
-
                 //现在使用配置
                 scope.config = overCinfig(config,main_config);
 
