@@ -10,7 +10,7 @@
 
 2. ngFengTingXun(自定义)扩展下载:
 
-[ https://github.com/zsping1989/learm/bower_components/angular-extend/src/](https://github.com/zsping1989/learm/bower_components/angular-extend/src/angular-extend.js)
+[ https://github.com/zsping1989/learm/tree/master/bower_components/angular-extend](https://github.com/zsping1989/learm/tree/master/bower_components/angular-extend)
 
 3.模块ngFengTingXun的默认配置ftx-multilevel-move-config
 
