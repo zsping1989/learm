@@ -29,11 +29,6 @@
                         {
                             "id":4,
                             "name":'成都',
-                            "parent_id":2
-                        },
-                        {
-                            "id":5,
-                            "name":'资阳',
                             "parent_id":2,
                             "childrens":[
                                 {
@@ -47,6 +42,11 @@
                                     "parent_id":5
                                 }
                             ]
+                        },
+                        {
+                            "id":5,
+                            "name":'资阳',
+                            "parent_id":2
                         }
                     ]
                 },
@@ -99,24 +99,46 @@
             }
         ];
 
+        $scope.area = [2,4];
+
         //配置/
         $scope.config = {
             show : "name", //显示字段
             value : "id", //值
-            label : ['省','市','区'] //标记
+            selected:true,
+            label : ['省','市','区'], //标记
+            empty : ['请选择省','请选择市','请选择县']
         };
 
         $scope.config1 = {
             show : "name",
             value : "id",
             margin_tree : true
+
         };
+
+        $scope.change = function(){
+            //数据
+            $scope.data = [
+                {
+                    "id":10,
+                    "name":'四川',
+                    "parent_id":1
+                },
+                {
+                    "id":3,
+                    "name":'湖南',
+                    "parent_id":1
+                }
+            ];
+        }
     });
 </script>
 <div ng-app="app">
     <div ng-controller="main">
-        <div ftx-multilevel-move='data' ftx-multilevel-move-config='config'></div>
-        <div ftx-multilevel-move='data1' ftx-multilevel-move-config='config1'></div>
+        <div ftx-multilevel-move='data' ng-model="area" ftx-multilevel-move-config='config' ></div>
+       <!-- <div ftx-multilevel-move='data1' ftx-multilevel-move-config='config1'></div>-->
+        <button type="button" ng-click="change()">改变</button>
     </div>
 </div>
 </body>
