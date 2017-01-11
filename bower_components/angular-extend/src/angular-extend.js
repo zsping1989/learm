@@ -3,7 +3,7 @@
  */
 (function(window,angular){'use strict';
     //定义模块名称
-    var MODULE_NAME = 'Main';
+    var MODULE_NAME = 'FengTingXun';
 
     //定义指令前缀
     var DIRECTIVE_PREFIX = 'ftx';
