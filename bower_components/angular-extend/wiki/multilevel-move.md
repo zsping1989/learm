@@ -6,11 +6,11 @@
 
 1. Angular下载:
 
-![  https://github.com/angular/angular](https://github.com/angular/angular.js.git)
+[ https://github.com/angular/angular](https://github.com/angular/angular.js.git)
 
 2. ngFengTingXun(自定义)扩展下载:
 
-![  https://github.com/zsping1989/learm/bower_components/angular-extend/src/](https://github.com/zsping1989/learm/bower_components/angular-extend/src/angular-extend.js)
+[ https://github.com/zsping1989/learm/bower_components/angular-extend/src/](https://github.com/zsping1989/learm/bower_components/angular-extend/src/angular-extend.js)
 
 3.模块ngFengTingXun的默认配置ftx-multilevel-move-config
 
