@@ -56,18 +56,19 @@
      * @type {*[]}
      */
     directive.multilevelMove = ['$parse', '$animate', '$compile', function($parse, $animate, $compile) {
+
         //默认配置
         var config = {
-            show : 'name', //显示字段
-            value : 'id', //值
-            childrens_key : 'childrens', //子节点字段
-            element_name : '', //表单节点名称
-            label : [], //标签
-            empty : [], //未选折时的文案
-            margin_tree : false, //边界数结构
+            show : 'name', //多级联动显示字段
+            value : 'id', //多级联动显示值
+            childrens_key : 'childrens', //子节点字段键
+            element_name : '', //表单节点名称,用于非ajax表单提交数据
+            label : [], //每一个下拉菜单的左侧说明
+            empty : [], //当没有选择值时的提示
+            margin_tree : false, //是否为数据库表结构数据
             primary_key : 'id', //主键
             parent_key : 'parent_id', //父级字段
-            selected : false //默认选中第一个
+            selected : false //是否默认选中第一个值
         };
 
         /**
@@ -144,7 +145,7 @@
             template:'<span ng-repeat="(key,value) in seleceLength">'+
                    '    <label>{{config[\'label\'][key]}}</label>'+
                    '    <select name="{{config[\'element_name\'] ? config[\'element_name\']+\'[]\' : \'\'}}" ng-model="area[key]" ng-change="change(area[key],key)" >'+
-                   '        <option value="">{{config[\'empty\'][key] || \'请选择\'}}</option>'+
+                   '        <option ng-if="config[\'empty\'] !==false" value="">{{config[\'empty\'][key] || \'请选择\'}}</option>'+
                    '        <option ng-repeat="x in value" value="{{x[config[\'value\']]}}">{{x[config[\'show\']]}}</option>'+
                    '    </select>'+
                    '</span>',
@@ -154,6 +155,11 @@
                 //现在使用配置
                 scope.config = overCinfig(config,main_config);
 
+                //不需要未选择提示时,将设置为自动选择第一个值
+                if(scope.config['empty']===false){
+                    scope.config['selected'] = true;
+                }
+
                 //选中值
                 scope.area = typeof scope.$eval(attr['ngModel']) == "object" ? scope.$eval(attr['ngModel']) : [];
 
@@ -161,21 +167,34 @@
                     scope.area[i] = scope.area[i]+''; //类型转换
                 }
 
-                //改变值
+                /**
+                 * 改变值方法
+                 * @param value 选择的值
+                 * @param select_index 第几个select
+                 */
                 scope.change = function(value,select_index){
 
-                    //当前操作数据
+                    //数据源
                     var datas = scope.datas;
 
+                    //当前selectd的数据
                     for(var i=0;i<select_index;i++){
                         datas = datas['id_'+scope.area[i]][scope.config['childrens_key']];
                     }
+
                     //选择存在子节点,添加子节点选项
                     if(typeof datas['id_'+value]=='object' && typeof datas['id_'+value][scope.config['childrens_key']]=="object"){
+                        //下一级select的数据
                         scope.seleceLength[select_index+1] = datas['id_'+value][scope.config['childrens_key']];
-                        //不存在子节点,删除子节点选项
+                        //如果设置了默认选择
+                        if(scope.config['empty']===false){
+                            scope.area = scope.area.concat(treeFirst(scope.seleceLength[select_index+1],scope.config['value'],scope.config['childrens_key']));
+                        }
+                    //不存在子节点,删除子节点选项
                     }else {
+                        //删除后面的select
                         scope.seleceLength.splice(select_index+1,scope.seleceLength.length-(select_index+1));
+                        //删除后面的无效选择
                         scope.area.splice(select_index+1,scope.area.length-(select_index+1));
                     }
                 };
